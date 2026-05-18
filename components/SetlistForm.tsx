@@ -94,7 +94,7 @@ export default function SetlistForm({
 
       leaders: leaders
         .split(",")
-        .map((leader) =>
+        .map((leader:any) =>
           leader.trim()
         )
         .filter(Boolean),
