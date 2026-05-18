@@ -1,4 +1,71 @@
+// import Link from "next/link";
+
+// async function getSongs() {
+//   const res = await fetch(
+//     `${process.env.NEXT_PUBLIC_BASE_URL}/api/songs`,
+//     {
+//       cache: "no-store",
+//     }
+//   );
+
+//   if (!res.ok) {
+//     throw new Error("Failed to fetch songs");
+//   }
+
+//   return res.json();
+// }
+
+
+//   export const metadata = {
+//     title : "Library - Worship Flow"
+// }
+
+// export default async function SongsPage() {
+//   const songs = await getSongs();
+
+//   return (
+//     <div className="w-full p-6">
+//       <div className="flex items-center justify-between mb-6">
+//         <h1 className="text-3xl font-bold">
+//           Songs
+//         </h1>
+
+//         <Link
+//           href="/songs/new"
+//           className="bg-black text-white px-4 py-2 rounded-md"
+//         >
+//           Add Song
+//         </Link>
+//       </div>
+
+//       <div className="space-y-4">
+//         {songs.map((song: any) => (
+//           <Link
+//             key={song._id}
+//             href={`/songs/${song._id}`}
+//             className="block border rounded-lg p-4 hover:bg-gray-50 transition"
+//           >
+//             <h2 className="font-semibold text-lg">
+//               {song.title}
+//             </h2>
+
+//             {song.key && (
+//               <p className="text-sm text-gray-500">
+//                 Key: {song.key}
+//               </p>
+//             )}
+//           </Link>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
 import Link from "next/link";
+
+import SongsList from "@/components/SongsList";
 
 async function getSongs() {
   const res = await fetch(
@@ -9,16 +76,17 @@ async function getSongs() {
   );
 
   if (!res.ok) {
-    throw new Error("Failed to fetch songs");
+    throw new Error(
+      "Failed to fetch songs"
+    );
   }
 
   return res.json();
 }
 
-
-  export const metadata = {
-    title : "Library - Worship Flow"
-}
+export const metadata = {
+  title: "Library - Worship Flow",
+};
 
 export default async function SongsPage() {
   const songs = await getSongs();
@@ -32,31 +100,13 @@ export default async function SongsPage() {
 
         <Link
           href="/songs/new"
-          className="bg-black text-white px-4 py-2 rounded-md"
+          className="bg-primary text-primary-foreground px-4 py-2 rounded-md"
         >
           Add Song
         </Link>
       </div>
 
-      <div className="space-y-4">
-        {songs.map((song: any) => (
-          <Link
-            key={song._id}
-            href={`/songs/${song._id}`}
-            className="block border rounded-lg p-4 hover:bg-gray-50 transition"
-          >
-            <h2 className="font-semibold text-lg">
-              {song.title}
-            </h2>
-
-            {song.key && (
-              <p className="text-sm text-gray-500">
-                Key: {song.key}
-              </p>
-            )}
-          </Link>
-        ))}
-      </div>
+      <SongsList songs={songs} />
     </div>
   );
 }
