@@ -129,27 +129,28 @@ export default function Navbar() {
             >
               <DropdownMenuItem asChild>
                 <Link href="/">
-                  Setlists
+                  <span className="text-lg">Setlists</span>
                 </Link>
               </DropdownMenuItem>
 
               <DropdownMenuItem asChild>
                 <Link href="/songs">
-                  Songs
+                <span className="text-lg">
+                  Songs</span>
                 </Link>
               </DropdownMenuItem>
 
               <DropdownMenuItem asChild>
-                <Link href="/songs/new">
+                <Link href="/songs/new" className="text-lg">
                   <Plus className="mr-2 h-4 w-4" />
-                  Add Song
+                  <span className="text-lg">Add Song</span>
                 </Link>
               </DropdownMenuItem>
 
               <DropdownMenuItem asChild>
                 <Link href="/setlists/new">
                   <Plus className="mr-2 h-4 w-4" />
-                  Add Setlist
+                  <span className="text-lg">Add Setlist</span>
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
