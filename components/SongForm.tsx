@@ -152,127 +152,295 @@
 //   );
 // }
 
-
 // components/SongForm.tsx
+
+// "use client";
+
+// import {
+//   memo,
+//   useCallback,
+//   useState,
+//   useTransition,
+// } from "react";
+
+// import { useRouter } from "next/navigation";
+
+// type Song = {
+//   _id?: string;
+//   title?: string;
+//   key?: string;
+//   lyrics?: string;
+//   lyricsWithChords?: string;
+// };
+
+// function SongForm({
+//   song,
+// }: {
+//   song?: Song;
+// }) {
+//   const router = useRouter();
+
+//   const [isPending, startTransition] =
+//     useTransition();
+
+//   const [form, setForm] =
+//     useState({
+//       title: song?.title || "",
+//       key: song?.key || "",
+//       lyrics: song?.lyrics || "",
+//       lyricsWithChords:
+//         song?.lyricsWithChords ||
+//         "",
+//     });
+
+//   const handleChange =
+//     useCallback(
+//       (
+//         e: React.ChangeEvent<
+//           HTMLInputElement | HTMLTextAreaElement
+//         >
+//       ) => {
+//         const {
+//           name,
+//           value,
+//         } = e.target;
+
+//         setForm((prev) => ({
+//           ...prev,
+//           [name]: value,
+//         }));
+//       },
+//       []
+//     );
+
+//   const handleSubmit =
+//     useCallback(
+//       async (
+//         e: React.FormEvent
+//       ) => {
+//         e.preventDefault();
+
+//         try {
+//           const res =
+//             await fetch(
+//               song
+//                 ? `/api/songs/${song._id}`
+//                 : "/api/songs",
+//               {
+//                 method: song
+//                   ? "PATCH"
+//                   : "POST",
+//                 headers: {
+//                   "Content-Type":
+//                     "application/json",
+//                 },
+//                 body: JSON.stringify(
+//                   form
+//                 ),
+//               }
+//             );
+
+//           if (!res.ok) {
+//             throw new Error(
+//               "Request failed"
+//             );
+//           }
+
+//           startTransition(() => {
+//             router.push(
+//               "/songs"
+//             );
+
+//             router.refresh();
+//           });
+//         } catch {
+//           alert(
+//             "Something went wrong"
+//           );
+//         }
+//       },
+//       [form, router, song]
+//     );
+
+//   return (
+//     <form
+//       onSubmit={handleSubmit}
+//       className="space-y-6"
+//     >
+//       <div>
+//         <label
+//           htmlFor="title"
+//           className="mb-2 block font-medium"
+//         >
+//           Title
+//         </label>
+
+//         <input
+//           id="title"
+//           name="title"
+//           required
+//           autoComplete="off"
+//           value={form.title}
+//           onChange={
+//             handleChange
+//           }
+//           className="w-full rounded-md border p-3 outline-none"
+//         />
+//       </div>
+
+//       <div>
+//         <label
+//           htmlFor="key"
+//           className="mb-2 block font-medium"
+//         >
+//           Key
+//         </label>
+
+//         <input
+//           id="key"
+//           name="key"
+//           autoComplete="off"
+//           value={form.key}
+//           onChange={
+//             handleChange
+//           }
+//           className="w-full rounded-md border p-3 outline-none"
+//         />
+//       </div>
+
+//       <div>
+//         <label
+//           htmlFor="lyrics"
+//           className="mb-2 block font-medium"
+//         >
+//           Lyrics
+//         </label>
+
+//         <textarea
+//           id="lyrics"
+//           name="lyrics"
+//           value={form.lyrics}
+//           onChange={
+//             handleChange
+//           }
+//           className="min-h-[250px] w-full rounded-md border p-3 outline-none"
+//         />
+//       </div>
+
+//       <div>
+//         <label
+//           htmlFor="lyricsWithChords"
+//           className="mb-2 block font-medium"
+//         >
+//           Lyrics With Chords
+//         </label>
+
+//         <textarea
+//           id="lyricsWithChords"
+//           name="lyricsWithChords"
+//           value={
+//             form.lyricsWithChords
+//           }
+//           onChange={
+//             handleChange
+//           }
+//           className="min-h-[250px] w-full rounded-md border p-3 font-mono outline-none"
+//         />
+//       </div>
+
+//       <button
+//         type="submit"
+//         disabled={isPending}
+//         className="rounded-md bg-black px-6 py-3 text-white transition-opacity hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
+//       >
+//         {isPending
+//           ? "Saving..."
+//           : song
+//           ? "Update Song"
+//           : "Create Song"}
+//       </button>
+//     </form>
+//   );
+// }
+
+// export default memo(SongForm);
 
 "use client";
 
-import {
-  memo,
-  useCallback,
-  useState,
-  useTransition,
-} from "react";
+import { memo, useCallback, useState, useTransition } from "react";
 
 import { useRouter } from "next/navigation";
 
 type Song = {
   _id?: string;
   title?: string;
+  songSequence?: string;
   key?: string;
   lyrics?: string;
   lyricsWithChords?: string;
 };
 
-function SongForm({
-  song,
-}: {
-  song?: Song;
-}) {
+function SongForm({ song }: { song?: Song }) {
   const router = useRouter();
 
-  const [isPending, startTransition] =
-    useTransition();
+  const [isPending, startTransition] = useTransition();
 
-  const [form, setForm] =
-    useState({
-      title: song?.title || "",
-      key: song?.key || "",
-      lyrics: song?.lyrics || "",
-      lyricsWithChords:
-        song?.lyricsWithChords ||
-        "",
-    });
+  const [form, setForm] = useState({
+    title: song?.title || "",
+    songSequence: song?.songSequence || "",
+    key: song?.key || "",
+    lyrics: song?.lyrics || "",
+    lyricsWithChords: song?.lyricsWithChords || "",
+  });
 
-  const handleChange =
-    useCallback(
-      (
-        e: React.ChangeEvent<
-          HTMLInputElement | HTMLTextAreaElement
-        >
-      ) => {
-        const {
-          name,
-          value,
-        } = e.target;
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
 
-        setForm((prev) => ({
-          ...prev,
-          [name]: value,
-        }));
-      },
-      []
-    );
+      setForm((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    },
+    [],
+  );
 
-  const handleSubmit =
-    useCallback(
-      async (
-        e: React.FormEvent
-      ) => {
-        e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-        try {
-          const res =
-            await fetch(
-              song
-                ? `/api/songs/${song._id}`
-                : "/api/songs",
-              {
-                method: song
-                  ? "PATCH"
-                  : "POST",
-                headers: {
-                  "Content-Type":
-                    "application/json",
-                },
-                body: JSON.stringify(
-                  form
-                ),
-              }
-            );
+      try {
+        const res = await fetch(
+          song ? `/api/songs/${song._id}` : "/api/songs",
+          {
+            method: song ? "PATCH" : "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(form),
+          },
+        );
 
-          if (!res.ok) {
-            throw new Error(
-              "Request failed"
-            );
-          }
-
-          startTransition(() => {
-            router.push(
-              "/songs"
-            );
-
-            router.refresh();
-          });
-        } catch {
-          alert(
-            "Something went wrong"
-          );
+        if (!res.ok) {
+          throw new Error("Request failed");
         }
-      },
-      [form, router, song]
-    );
+
+        startTransition(() => {
+          router.push("/songs");
+
+          router.refresh();
+        });
+      } catch {
+        alert("Something went wrong");
+      }
+    },
+    [form, router, song],
+  );
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-6"
-    >
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label
-          htmlFor="title"
-          className="mb-2 block font-medium"
-        >
+        <label htmlFor="title" className="mb-2 block font-medium">
           Title
         </label>
 
@@ -282,18 +450,13 @@ function SongForm({
           required
           autoComplete="off"
           value={form.title}
-          onChange={
-            handleChange
-          }
+          onChange={handleChange}
           className="w-full rounded-md border p-3 outline-none"
         />
       </div>
 
       <div>
-        <label
-          htmlFor="key"
-          className="mb-2 block font-medium"
-        >
+        <label htmlFor="key" className="mb-2 block font-medium">
           Key
         </label>
 
@@ -302,18 +465,13 @@ function SongForm({
           name="key"
           autoComplete="off"
           value={form.key}
-          onChange={
-            handleChange
-          }
+          onChange={handleChange}
           className="w-full rounded-md border p-3 outline-none"
         />
       </div>
 
       <div>
-        <label
-          htmlFor="lyrics"
-          className="mb-2 block font-medium"
-        >
+        <label htmlFor="lyrics" className="mb-2 block font-medium">
           Lyrics
         </label>
 
@@ -321,31 +479,36 @@ function SongForm({
           id="lyrics"
           name="lyrics"
           value={form.lyrics}
-          onChange={
-            handleChange
-          }
+          onChange={handleChange}
           className="min-h-[250px] w-full rounded-md border p-3 outline-none"
         />
       </div>
 
       <div>
-        <label
-          htmlFor="lyricsWithChords"
-          className="mb-2 block font-medium"
-        >
+        <label htmlFor="lyricsWithChords" className="mb-2 block font-medium">
           Lyrics With Chords
         </label>
 
         <textarea
           id="lyricsWithChords"
           name="lyricsWithChords"
-          value={
-            form.lyricsWithChords
-          }
-          onChange={
-            handleChange
-          }
+          value={form.lyricsWithChords}
+          onChange={handleChange}
           className="min-h-[250px] w-full rounded-md border p-3 font-mono outline-none"
+        />
+      </div>
+      <div>
+        <label htmlFor="songSequence" className="mb-2 block font-medium">
+          Song Sequence
+        </label>
+
+        <textarea
+          id="songSequence"
+          name="songSequence"
+          value={form.songSequence}
+          onChange={handleChange}
+          className="min-h-[120px] w-full rounded-md border p-3 font-mono outline-none"
+          placeholder="[Keys]\nIntro\nVerse 1\nChorus\nBridge"
         />
       </div>
 
@@ -354,11 +517,7 @@ function SongForm({
         disabled={isPending}
         className="rounded-md bg-black px-6 py-3 text-white transition-opacity hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
       >
-        {isPending
-          ? "Saving..."
-          : song
-          ? "Update Song"
-          : "Create Song"}
+        {isPending ? "Saving..." : song ? "Update Song" : "Create Song"}
       </button>
     </form>
   );
