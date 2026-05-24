@@ -1,277 +1,79 @@
 // "use client";
 
-// import { useState } from "react";
-// import { useRouter } from "next/navigation";
-
-// export default function SongForm({
-//   song,
-// }: {
-//   song?: any;
-// }) {
-//   const router = useRouter();
-
-//   const [title, setTitle] = useState(
-//     song?.title || ""
-//   );
-
-//   const [key, setKey] = useState(
-//     song?.key || ""
-//   );
-
-//   const [lyrics, setLyrics] = useState(
-//     song?.lyrics || ""
-//   );
-
-//   const [
-//     lyricsWithChords,
-//     setLyricsWithChords,
-//   ] = useState(
-//     song?.lyricsWithChords || ""
-//   );
-
-//   const [loading, setLoading] =
-//     useState(false);
-
-//   async function handleSubmit(
-//     e: React.FormEvent
-//   ) {
-//     e.preventDefault();
-
-//     setLoading(true);
-
-//     const payload = {
-//       title,
-//       key,
-//       lyrics,
-//       lyricsWithChords,
-//     };
-
-//     const url = song
-//       ? `/api/songs/${song._id}`
-//       : "/api/songs";
-
-//     const method = song
-//       ? "PATCH"
-//       : "POST";
-
-//     const res = await fetch(url, {
-//       method,
-//       headers: {
-//         "Content-Type":
-//           "application/json",
-//       },
-//       body: JSON.stringify(payload),
-//     });
-
-//     setLoading(false);
-
-//     if (!res.ok) {
-//       alert("Something went wrong");
-//       return;
-//     }
-
-//     router.push("/songs");
-//     router.refresh();
-//   }
-
-//   return (
-//     <form
-//       onSubmit={handleSubmit}
-//       className="space-y-6"
-//     >
-//       <div>
-//         <label className="block mb-2 font-medium">
-//           Title
-//         </label>
-
-//         <input
-//           value={title}
-//           onChange={(e) =>
-//             setTitle(e.target.value)
-//           }
-//           className="w-full border rounded-md p-3"
-//           required
-//         />
-//       </div>
-
-//       <div>
-//         <label className="block mb-2 font-medium">
-//           Key
-//         </label>
-
-//         <input
-//           value={key}
-//           onChange={(e) =>
-//             setKey(e.target.value)
-//           }
-//           className="w-full border rounded-md p-3"
-//         />
-//       </div>
-
-//       <div>
-//         <label className="block mb-2 font-medium">
-//           Lyrics
-//         </label>
-
-//         <textarea
-//           value={lyrics}
-//           onChange={(e) =>
-//             setLyrics(e.target.value)
-//           }
-//           className="w-full border rounded-md p-3 min-h-[250px]"
-//         />
-//       </div>
-
-//       <div>
-//         <label className="block mb-2 font-medium">
-//           Lyrics With Chords
-//         </label>
-
-//         <textarea
-//           value={lyricsWithChords}
-//           onChange={(e) =>
-//             setLyricsWithChords(
-//               e.target.value
-//             )
-//           }
-//           className="w-full border rounded-md p-3 min-h-[250px] font-mono"
-//         />
-//       </div>
-
-//       <button
-//         disabled={loading}
-//         className="bg-black text-white px-6 py-3 rounded-md"
-//       >
-//         {loading
-//           ? "Saving..."
-//           : song
-//           ? "Update Song"
-//           : "Create Song"}
-//       </button>
-//     </form>
-//   );
-// }
-
-// components/SongForm.tsx
-
-// "use client";
-
-// import {
-//   memo,
-//   useCallback,
-//   useState,
-//   useTransition,
-// } from "react";
+// import { memo, useCallback, useState, useTransition } from "react";
 
 // import { useRouter } from "next/navigation";
 
 // type Song = {
 //   _id?: string;
 //   title?: string;
+//   songSequence?: string;
 //   key?: string;
 //   lyrics?: string;
 //   lyricsWithChords?: string;
 // };
 
-// function SongForm({
-//   song,
-// }: {
-//   song?: Song;
-// }) {
+// function SongForm({ song }: { song?: Song }) {
 //   const router = useRouter();
 
-//   const [isPending, startTransition] =
-//     useTransition();
+//   const [isPending, startTransition] = useTransition();
 
-//   const [form, setForm] =
-//     useState({
-//       title: song?.title || "",
-//       key: song?.key || "",
-//       lyrics: song?.lyrics || "",
-//       lyricsWithChords:
-//         song?.lyricsWithChords ||
-//         "",
-//     });
+//   const [form, setForm] = useState({
+//     title: song?.title || "",
+//     songSequence: song?.songSequence || "",
+//     key: song?.key || "",
+//     lyrics: song?.lyrics || "",
+//     lyricsWithChords: song?.lyricsWithChords || "",
+//   });
 
-//   const handleChange =
-//     useCallback(
-//       (
-//         e: React.ChangeEvent<
-//           HTMLInputElement | HTMLTextAreaElement
-//         >
-//       ) => {
-//         const {
-//           name,
-//           value,
-//         } = e.target;
+//   const handleChange = useCallback(
+//     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+//       const { name, value } = e.target;
 
-//         setForm((prev) => ({
-//           ...prev,
-//           [name]: value,
-//         }));
-//       },
-//       []
-//     );
+//       setForm((prev) => ({
+//         ...prev,
+//         [name]: value,
+//       }));
+//     },
+//     [],
+//   );
 
-//   const handleSubmit =
-//     useCallback(
-//       async (
-//         e: React.FormEvent
-//       ) => {
-//         e.preventDefault();
+//   const handleSubmit = useCallback(
+//     async (e: React.FormEvent) => {
+//       e.preventDefault();
 
-//         try {
-//           const res =
-//             await fetch(
-//               song
-//                 ? `/api/songs/${song._id}`
-//                 : "/api/songs",
-//               {
-//                 method: song
-//                   ? "PATCH"
-//                   : "POST",
-//                 headers: {
-//                   "Content-Type":
-//                     "application/json",
-//                 },
-//                 body: JSON.stringify(
-//                   form
-//                 ),
-//               }
-//             );
+//       try {
+//         const res = await fetch(
+//           song ? `/api/songs/${song._id}` : "/api/songs",
+//           {
+//             method: song ? "PATCH" : "POST",
+//             headers: {
+//               "Content-Type": "application/json",
+//             },
+//             body: JSON.stringify(form),
+//           },
+//         );
 
-//           if (!res.ok) {
-//             throw new Error(
-//               "Request failed"
-//             );
-//           }
-
-//           startTransition(() => {
-//             router.push(
-//               "/songs"
-//             );
-
-//             router.refresh();
-//           });
-//         } catch {
-//           alert(
-//             "Something went wrong"
-//           );
+//         if (!res.ok) {
+//           throw new Error("Request failed");
 //         }
-//       },
-//       [form, router, song]
-//     );
+
+//         startTransition(() => {
+//           router.push("/songs");
+
+//           router.refresh();
+//         });
+//       } catch {
+//         alert("Something went wrong");
+//       }
+//     },
+//     [form, router, song],
+//   );
 
 //   return (
-//     <form
-//       onSubmit={handleSubmit}
-//       className="space-y-6"
-//     >
+//     <form onSubmit={handleSubmit} className="space-y-6">
 //       <div>
-//         <label
-//           htmlFor="title"
-//           className="mb-2 block font-medium"
-//         >
+//         <label htmlFor="title" className="mb-2 block font-medium">
 //           Title
 //         </label>
 
@@ -281,18 +83,13 @@
 //           required
 //           autoComplete="off"
 //           value={form.title}
-//           onChange={
-//             handleChange
-//           }
+//           onChange={handleChange}
 //           className="w-full rounded-md border p-3 outline-none"
 //         />
 //       </div>
 
 //       <div>
-//         <label
-//           htmlFor="key"
-//           className="mb-2 block font-medium"
-//         >
+//         <label htmlFor="key" className="mb-2 block font-medium">
 //           Key
 //         </label>
 
@@ -301,18 +98,13 @@
 //           name="key"
 //           autoComplete="off"
 //           value={form.key}
-//           onChange={
-//             handleChange
-//           }
+//           onChange={handleChange}
 //           className="w-full rounded-md border p-3 outline-none"
 //         />
 //       </div>
 
 //       <div>
-//         <label
-//           htmlFor="lyrics"
-//           className="mb-2 block font-medium"
-//         >
+//         <label htmlFor="lyrics" className="mb-2 block font-medium">
 //           Lyrics
 //         </label>
 
@@ -320,31 +112,36 @@
 //           id="lyrics"
 //           name="lyrics"
 //           value={form.lyrics}
-//           onChange={
-//             handleChange
-//           }
+//           onChange={handleChange}
 //           className="min-h-[250px] w-full rounded-md border p-3 outline-none"
 //         />
 //       </div>
 
 //       <div>
-//         <label
-//           htmlFor="lyricsWithChords"
-//           className="mb-2 block font-medium"
-//         >
+//         <label htmlFor="lyricsWithChords" className="mb-2 block font-medium">
 //           Lyrics With Chords
 //         </label>
 
 //         <textarea
 //           id="lyricsWithChords"
 //           name="lyricsWithChords"
-//           value={
-//             form.lyricsWithChords
-//           }
-//           onChange={
-//             handleChange
-//           }
+//           value={form.lyricsWithChords}
+//           onChange={handleChange}
 //           className="min-h-[250px] w-full rounded-md border p-3 font-mono outline-none"
+//         />
+//       </div>
+//       <div>
+//         <label htmlFor="songSequence" className="mb-2 block font-medium">
+//           Song Sequence
+//         </label>
+
+//         <textarea
+//           id="songSequence"
+//           name="songSequence"
+//           value={form.songSequence}
+//           onChange={handleChange}
+//           className="min-h-[120px] w-full rounded-md border p-3 font-mono outline-none"
+//           placeholder="[Keys]\nIntro\nVerse 1\nChorus\nBridge"
 //         />
 //       </div>
 
@@ -353,11 +150,7 @@
 //         disabled={isPending}
 //         className="rounded-md bg-black px-6 py-3 text-white transition-opacity hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
 //       >
-//         {isPending
-//           ? "Saving..."
-//           : song
-//           ? "Update Song"
-//           : "Create Song"}
+//         {isPending ? "Saving..." : song ? "Update Song" : "Create Song"}
 //       </button>
 //     </form>
 //   );
@@ -365,9 +158,16 @@
 
 // export default memo(SongForm);
 
+
+
 "use client";
 
-import { memo, useCallback, useState, useTransition } from "react";
+import {
+  memo,
+  useCallback,
+  useState,
+  useTransition,
+} from "react";
 
 import { useRouter } from "next/navigation";
 
@@ -380,135 +180,292 @@ type Song = {
   lyricsWithChords?: string;
 };
 
-function SongForm({ song }: { song?: Song }) {
+type InputFieldProps = {
+  id: string;
+  name: string;
+  value: string;
+  required?: boolean;
+  autoComplete?: string;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => void;
+};
+
+type TextAreaFieldProps = {
+  id: string;
+  name: string;
+  value: string;
+  placeholder?: string;
+  className?: string;
+  onChange: (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => void;
+};
+
+const InputField = memo(
+  ({
+    id,
+    name,
+    value,
+    required,
+    autoComplete,
+    onChange,
+  }: InputFieldProps) => {
+    return (
+      <input
+        id={id}
+        name={name}
+        required={required}
+        autoComplete={autoComplete}
+        value={value}
+        onChange={onChange}
+        className="w-full rounded-md border p-3 outline-none"
+      />
+    );
+  },
+);
+
+InputField.displayName = "InputField";
+
+const TextAreaField = memo(
+  ({
+    id,
+    name,
+    value,
+    placeholder,
+    className,
+    onChange,
+  }: TextAreaFieldProps) => {
+    return (
+      <textarea
+        id={id}
+        name={name}
+        value={value}
+        placeholder={placeholder}
+        onChange={onChange}
+        className={className}
+      />
+    );
+  },
+);
+
+TextAreaField.displayName =
+  "TextAreaField";
+
+function SongForm({
+  song,
+}: {
+  song?: Song;
+}) {
   const router = useRouter();
 
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] =
+    useTransition();
 
-  const [form, setForm] = useState({
-    title: song?.title || "",
-    songSequence: song?.songSequence || "",
-    key: song?.key || "",
-    lyrics: song?.lyrics || "",
-    lyricsWithChords: song?.lyricsWithChords || "",
-  });
+  const [form, setForm] =
+    useState({
+      title: song?.title || "",
+      songSequence:
+        song?.songSequence || "",
+      key: song?.key || "",
+      lyrics: song?.lyrics || "",
+      lyricsWithChords:
+        song?.lyricsWithChords || "",
+    });
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.target;
+  const handleInputChange =
+    useCallback(
+      (
+        e: React.ChangeEvent<HTMLInputElement>
+      ) => {
+        const {
+          name,
+          value,
+        } = e.target;
 
-      setForm((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    },
-    [],
-  );
+        setForm((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+      },
+      [],
+    );
 
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
+  const handleTextareaChange =
+    useCallback(
+      (
+        e: React.ChangeEvent<HTMLTextAreaElement>
+      ) => {
+        const {
+          name,
+          value,
+        } = e.target;
 
-      try {
-        const res = await fetch(
-          song ? `/api/songs/${song._id}` : "/api/songs",
-          {
-            method: song ? "PATCH" : "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(form),
-          },
-        );
+        setForm((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+      },
+      [],
+    );
 
-        if (!res.ok) {
-          throw new Error("Request failed");
+  const handleSubmit =
+    useCallback(
+      async (
+        e: React.FormEvent
+      ) => {
+        e.preventDefault();
+
+        try {
+          const res =
+            await fetch(
+              song
+                ? `/api/songs/${song._id}`
+                : "/api/songs",
+              {
+                method: song
+                  ? "PATCH"
+                  : "POST",
+                headers: {
+                  "Content-Type":
+                    "application/json",
+                },
+                body: JSON.stringify(
+                  form,
+                ),
+              },
+            );
+
+          if (!res.ok) {
+            throw new Error(
+              "Request failed",
+            );
+          }
+
+          startTransition(() => {
+            router.push(
+              "/songs",
+            );
+          });
+        } catch {
+          alert(
+            "Something went wrong",
+          );
         }
-
-        startTransition(() => {
-          router.push("/songs");
-
-          router.refresh();
-        });
-      } catch {
-        alert("Something went wrong");
-      }
-    },
-    [form, router, song],
-  );
+      },
+      [form, router, song],
+    );
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6"
+    >
       <div>
-        <label htmlFor="title" className="mb-2 block font-medium">
+        <label
+          htmlFor="title"
+          className="mb-2 block font-medium"
+        >
           Title
         </label>
 
-        <input
+        <InputField
           id="title"
           name="title"
           required
           autoComplete="off"
           value={form.title}
-          onChange={handleChange}
-          className="w-full rounded-md border p-3 outline-none"
+          onChange={
+            handleInputChange
+          }
         />
       </div>
 
       <div>
-        <label htmlFor="key" className="mb-2 block font-medium">
+        <label
+          htmlFor="key"
+          className="mb-2 block font-medium"
+        >
           Key
         </label>
 
-        <input
+        <InputField
           id="key"
           name="key"
           autoComplete="off"
           value={form.key}
-          onChange={handleChange}
-          className="w-full rounded-md border p-3 outline-none"
+          onChange={
+            handleInputChange
+          }
         />
       </div>
 
       <div>
-        <label htmlFor="lyrics" className="mb-2 block font-medium">
+        <label
+          htmlFor="lyrics"
+          className="mb-2 block font-medium"
+        >
           Lyrics
         </label>
 
-        <textarea
+        <TextAreaField
           id="lyrics"
           name="lyrics"
           value={form.lyrics}
-          onChange={handleChange}
+          onChange={
+            handleTextareaChange
+          }
           className="min-h-[250px] w-full rounded-md border p-3 outline-none"
         />
       </div>
 
       <div>
-        <label htmlFor="lyricsWithChords" className="mb-2 block font-medium">
+        <label
+          htmlFor="lyricsWithChords"
+          className="mb-2 block font-medium"
+        >
           Lyrics With Chords
         </label>
 
-        <textarea
+        <TextAreaField
           id="lyricsWithChords"
           name="lyricsWithChords"
-          value={form.lyricsWithChords}
-          onChange={handleChange}
+          value={
+            form.lyricsWithChords
+          }
+          onChange={
+            handleTextareaChange
+          }
           className="min-h-[250px] w-full rounded-md border p-3 font-mono outline-none"
         />
       </div>
+
       <div>
-        <label htmlFor="songSequence" className="mb-2 block font-medium">
+        <label
+          htmlFor="songSequence"
+          className="mb-2 block font-medium"
+        >
           Song Sequence
         </label>
 
-        <textarea
+        <TextAreaField
           id="songSequence"
           name="songSequence"
-          value={form.songSequence}
-          onChange={handleChange}
+          value={
+            form.songSequence
+          }
+          onChange={
+            handleTextareaChange
+          }
+          placeholder="[Keys]
+
+Intro
+Verse 1
+Chorus
+Verse 2
+Bridge
+Chorus x2"
           className="min-h-[120px] w-full rounded-md border p-3 font-mono outline-none"
-          placeholder="[Keys]\nIntro\nVerse 1\nChorus\nBridge"
         />
       </div>
 
@@ -517,7 +474,11 @@ function SongForm({ song }: { song?: Song }) {
         disabled={isPending}
         className="rounded-md bg-black px-6 py-3 text-white transition-opacity hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
       >
-        {isPending ? "Saving..." : song ? "Update Song" : "Create Song"}
+        {isPending
+          ? "Saving..."
+          : song
+            ? "Update Song"
+            : "Create Song"}
       </button>
     </form>
   );
